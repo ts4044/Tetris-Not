@@ -11,10 +11,14 @@ public class Piece : MonoBehaviour
     public float stepDelay = 1f;
     public float moveDelay = 0.1f;
     public float lockDelay = 0.5f;
+    public Camera cam;
 
     private float stepTime;
     private float moveTime;
     private float lockTime;
+    private float shake = 0;
+    private float shakeAmount = .3f;
+    private float decreaseFactor = 1;
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -42,25 +46,42 @@ public class Piece : MonoBehaviour
 
         lockTime += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Q)) {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
             Rotate(-1);
-        } else if (Input.GetKeyDown(KeyCode.E)) {
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
             Rotate(1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             HardDrop();
         }
 
-        if (Time.time > moveTime) {
+        if (Time.time > moveTime)
+        {
             HandleMoveInputs();
         }
 
-        if (Time.time > stepTime) {
+        if (Time.time > stepTime)
+        {
             Step();
         }
 
         board.Set(this);
+        if (shake > 0)
+        {
+            Vector2 circle = Random.insideUnitCircle*shakeAmount;
+            cam.transform.localPosition =  new Vector3( circle.x, circle.y,  -10);
+            shake -= Time.deltaTime * decreaseFactor;
+
+        }
+        else
+        {
+            shake = 0;
+        }
     }
 
     private void HandleMoveInputs()
@@ -96,15 +117,15 @@ public class Piece : MonoBehaviour
         while (Move(Vector2Int.down)) {
             continue;
         }
-
         Lock();
+        shake = 1;
     }
 
     private void Lock()
     {
         board.Set(this);
         // Instead of clear line when the line is full, add an animation
-        // board.ClearLines();
+        board.ClearLines();
         board.SpawnPiece();
     }
 
