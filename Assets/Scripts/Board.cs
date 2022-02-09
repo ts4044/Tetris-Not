@@ -3,6 +3,9 @@ using UnityEngine.Tilemaps;
 
 public class Board : MonoBehaviour
 {
+    public GameObject board;
+    public GameObject failureMessage;
+    public GameObject ghost;
     public Tilemap tilemap { get; private set; }
     public Piece activePiece { get; private set; }
     public TetrominoData[] tetrominoes;
@@ -68,6 +71,9 @@ public class Board : MonoBehaviour
     public void GameOver()
     {
         tilemap.ClearAllTiles();
+        board.SetActive(false);
+        ghost.SetActive(false);
+        failureMessage.SetActive(true);
     }
 
     public void Set(Piece piece)
