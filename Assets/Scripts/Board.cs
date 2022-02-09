@@ -13,6 +13,10 @@ public class Board : MonoBehaviour
 
     public AudioSource landingSound;
     public AudioSource ceasingSound;
+    public bool isSoundEffectOn = false;
+    public bool isCeasingParticleOn = false;
+    public bool isShakerOn = false;
+    public Shaker shaker;
 
    
     public RectInt Bounds {
@@ -50,7 +54,10 @@ public class Board : MonoBehaviour
         int random = Random.Range(0, tetrominoes.Length);
         TetrominoData data = tetrominoes[random];
         activePiece.Initialize(this, spawnPosition, data);
-        landingSound.Play();
+        if (isSoundEffectOn)
+        {
+            landingSound.Play();
+        }
         if (IsValidPosition(activePiece, spawnPosition)) {
             Set(activePiece);
         } else {
@@ -139,8 +146,18 @@ public class Board : MonoBehaviour
     public void LineClear(int row)
     {
         RectInt bounds = Bounds;
-        ceasingSound.Play();
-        ceasingParticle.Play();
+        if (isSoundEffectOn)
+        {
+            ceasingSound.Play();
+        }
+        if (isCeasingParticleOn)
+        {
+            ceasingParticle.Play();
+        }
+        if (isShakerOn)
+        {
+            shaker.shake();
+        }
         // Clear all tiles in the row
         for (int col = bounds.xMin; col < bounds.xMax; col++)
         {

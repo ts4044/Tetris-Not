@@ -7,18 +7,17 @@ public class Piece : MonoBehaviour
     public Vector3Int[] cells { get; private set; }
     public Vector3Int position { get; private set; }
     public int rotationIndex { get; private set; }
-
+    public AudioSource movingSound;
     public float stepDelay = 1f;
     public float moveDelay = 0.1f;
     public float lockDelay = 0.5f;
-    public Camera cam;
+    public bool isSoundEffectOn = false;
 
     private float stepTime;
     private float moveTime;
     private float lockTime;
-    private float shake = 0;
-    private float shakeAmount = .3f;
-    private float decreaseFactor = 1;
+
+   
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -71,17 +70,7 @@ public class Piece : MonoBehaviour
         }
 
         board.Set(this);
-        if (shake > 0)
-        {
-            Vector2 circle = Random.insideUnitCircle*shakeAmount;
-            cam.transform.localPosition =  new Vector3( circle.x, circle.y,  -10);
-            shake -= Time.deltaTime * decreaseFactor;
-
-        }
-        else
-        {
-            shake = 0;
-        }
+        
     }
 
     private void HandleMoveInputs()
@@ -89,14 +78,26 @@ public class Piece : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
         {
             if (Move(Vector2Int.down)) {
+                if (isSoundEffectOn)
+                {
+                    movingSound.Play();
+                }
                 stepTime = Time.time + stepDelay;
             }
         }
 
         // Left/right movement
         if (Input.GetKey(KeyCode.A)) {
+            if (isSoundEffectOn)
+            {
+                movingSound.Play();
+            }
             Move(Vector2Int.left);
         } else if (Input.GetKey(KeyCode.D)) {
+            if (isSoundEffectOn)
+            {
+                movingSound.Play();
+            }
             Move(Vector2Int.right);
         }
     }
@@ -118,7 +119,6 @@ public class Piece : MonoBehaviour
             continue;
         }
         Lock();
-        shake = 1;
     }
 
     private void Lock()
@@ -131,6 +131,7 @@ public class Piece : MonoBehaviour
 
     private bool Move(Vector2Int translation)
     {
+       
         Vector3Int newPosition = position;
         newPosition.x += translation.x;
         newPosition.y += translation.y;
