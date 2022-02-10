@@ -54,6 +54,11 @@ public class ToggleManager : MonoBehaviour
         board.isShakerOn = switchStat;
     }
 
+    public void backgroundSwitch(bool switchStat)
+    {
+        board.isBackgroundOn = switchStat;
+    }
+
     // Update is called once per frame
     void Update()
     {

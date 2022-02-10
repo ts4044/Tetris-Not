@@ -6,6 +6,7 @@ public class Board : MonoBehaviour
     public GameObject board;
     public GameObject failureMessage;
     public GameObject ghost;
+    public GameObject background;
     public Tilemap tilemap { get; private set; }
     public Piece activePiece { get; private set; }
     public TetrominoData[] tetrominoes;
@@ -14,11 +15,13 @@ public class Board : MonoBehaviour
     public ParticleSystem ceasingParticle;
 
 
+
     public AudioSource landingSound;
     public AudioSource ceasingSound;
     public bool isSoundEffectOn = false;
     public bool isCeasingParticleOn = false;
     public bool isShakerOn = false;
+    public bool isBackgroundOn = false;
     public Shaker shaker;
 
    
@@ -43,13 +46,17 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
-           
         SpawnPiece();
     }
 
     private void Update()
     {
-        
+        if(isBackgroundOn)
+        {
+            background.SetActive(true);
+        } else {
+            background.SetActive(false);
+        }
     }
 
     public void SpawnPiece()
